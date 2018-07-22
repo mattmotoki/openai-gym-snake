@@ -115,6 +115,7 @@ class Snake(Env):
         ind = np.random.randint(len(open_locs), size=1)[0]
         return open_locs[ind]
 
+
     def render(self):
         outfile = sys.stdout
         outfile.write(f"Score: {self.info['score']}\n")
@@ -142,22 +143,28 @@ class Snake(Env):
             sys.exit('You lose!')
                
         # check collision
-        
         if (i,j) in self.info['snake_seq']:
             self.render()
             sys.exit('You lose!')
         
         # update food
+        done = False
         if (i,j) == self.info['food']:
-            food = self._get_random_food()
-            self.info['food'] = food
-            self.info['score'] +=1
-            self.info['snake_len'] +=1
-            reward = 1
 
-            # update food
-            self.observation[food[0], food[1]] = -3
-            self._board[food[0], food[1]] = self._symbol_map[-3]
+            # check if done
+            if np.all(self.observation!=-2):
+                done = True
+                reward = 10
+            else:
+                food = self._get_random_food()
+                self.info['food'] = food
+                self.info['score'] +=1
+                self.info['snake_len'] +=1
+                reward = 1
+
+                # update food
+                self.observation[food[0], food[1]] = -3
+                self._board[food[0], food[1]] = self._symbol_map[-3]
 
         else:
             # update tail
@@ -183,8 +190,6 @@ class Snake(Env):
         self.info['action_seq'].append(action)
         self.info['snake_seq'].append((i,j))
             
-        # check if done
-        done = np.all(self.observation!=-2)
 
         return self.observation, done, reward, self.info
 
@@ -212,5 +217,5 @@ if __name__ == "__main__":
         a = env.get_input()
         _, done, _, _ = env.step(a)
         if done:
-            render()
+            env.render()
             sys.exit('You win!')
