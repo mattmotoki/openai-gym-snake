@@ -50,10 +50,8 @@ class Snake(Env):
             (2, 2): utils.colorize(u"\u2502", "green"),
         }
 
-        self._key2action = {"w": 0, "a":1, "s":2, "d":3}
+        self._key2action = {"i": 0, "j":1, "k":2, "l":3}
         
-
-
         #----------------
         # initialize self.info
         self.info = {
@@ -104,7 +102,7 @@ class Snake(Env):
         if x=="q":
             self.render()
             sys.exit("Thanks for playing!")
-        elif x in ("w","a","s","d"):
+        elif x in ("i","j","k","l"):
             return self._key2action[x]
         else:
             self.render()
@@ -189,7 +187,6 @@ class Snake(Env):
         self.info['symbol_seq'].append(symbol)
         self.info['action_seq'].append(action)
         self.info['snake_seq'].append((i,j))
-            
 
         return self.observation, done, reward, self.info
 
@@ -199,7 +196,7 @@ if __name__ == "__main__":
     def get_args():
         parser = argparse.ArgumentParser()
         parser.add_argument("-m", "--n_rows", default=4, type=int, help="number of rows")
-        parser.add_argument("-n", "--n_cols", default=8, type=int, help="number of rows")
+        parser.add_argument("-n", "--n_cols", default=8, type=int, help="number of columns")
         parser.add_argument("-l", "--snake_len", default=3, type=int, help="initial length of snake")
         return parser.parse_args()
 
